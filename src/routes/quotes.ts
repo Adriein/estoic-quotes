@@ -61,4 +61,4 @@ router.get(
 //     return;
 //   });
 
-export { router as quotesRouter };
+export { router as quotes };

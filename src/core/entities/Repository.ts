@@ -1,7 +1,7 @@
 export interface Repository<T> {
-  //   fetch(): T;
+  fetch(id: string): Promise<T>;
   find(): Promise<T[]>;
-  //   create(): T;
-  //   put(): T;
-  //   delete(): T;
+  save(body: T): Promise<T>;
+  put(id: string, body: T): Promise<T>;
+  delete(id: string): Promise<number>;
 }

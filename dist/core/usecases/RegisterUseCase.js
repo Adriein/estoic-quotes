@@ -35,53 +35,33 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-var express_1 = __importDefault(require("express"));
-var body_parser_1 = __importDefault(require("body-parser"));
-var quotes_1 = require("./routes/quotes");
-var auth_1 = require("./routes/auth");
-var mongoose_1 = __importDefault(require("mongoose"));
-var middlewares_1 = require("./routes/middlewares");
-var chalk_1 = __importDefault(require("chalk"));
-var init = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var DATABASE_URL, err_1, app;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                console.log(chalk_1.default.blue('Starting up...'));
-                DATABASE_URL = 'mongodb://127.0.0.1:27017/test';
-                _a.label = 1;
-            case 1:
-                _a.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, mongoose_1.default.connect(DATABASE_URL, {
-                        useNewUrlParser: true,
-                        useUnifiedTopology: true,
-                        useCreateIndex: true,
-                    })];
-            case 2:
-                _a.sent();
-                console.log(chalk_1.default.green('Conected to MongoDB'));
-                return [3 /*break*/, 4];
-            case 3:
-                err_1 = _a.sent();
-                console.error(err_1);
-                return [3 /*break*/, 4];
-            case 4:
-                app = express_1.default();
-                app.set('port', process.env.PORT || 5000);
-                console.log(chalk_1.default.blue("App Environment: PORT: " + app.get('port') + " CONFIG: DEV "));
-                app.use(body_parser_1.default.json());
-                app.use('/api/auth', auth_1.auth);
-                app.use('/api/admin', quotes_1.quotes);
-                app.use(middlewares_1.errorHandler);
-                app.listen(app.get('port'), function () {
-                    console.log(chalk_1.default.bgGreen.black.bold("Server running..."));
-                });
-                return [2 /*return*/];
-        }
-    });
-}); };
-init();
+exports.RegisterUseCase = void 0;
+var entities_1 = require("../entities");
+var errors_1 = require("../errors");
+var helpers_1 = require("../helpers");
+var RegisterUseCase = /** @class */ (function () {
+    function RegisterUseCase(repository) {
+        this.repository = repository;
+    }
+    RegisterUseCase.prototype.execute = function (body) {
+        return __awaiter(this, void 0, void 0, function () {
+            var userOnDB, createdUser;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.repository.fetch(body.username)];
+                    case 1:
+                        userOnDB = _a.sent();
+                        if (!helpers_1.isEmpty(userOnDB))
+                            throw new errors_1.AlreadyExists('User already exists in DB');
+                        return [4 /*yield*/, this.repository.save(body)];
+                    case 2:
+                        createdUser = _a.sent();
+                        return [2 /*return*/, new entities_1.Result([createdUser])];
+                }
+            });
+        });
+    };
+    return RegisterUseCase;
+}());
+exports.RegisterUseCase = RegisterUseCase;

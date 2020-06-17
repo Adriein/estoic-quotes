@@ -1,15 +1,24 @@
 import { Quote } from '../../core/entities/Quote';
 import { Repository } from '../../core/entities/Repository';
-import { MongoDs } from '../data/MongoDS';
 
 export class QuoteRepository implements Repository<Quote> {
-  private datasource: MongoDs;
-
-  constructor() {
-    this.datasource = new MongoDs();
+  async find(): Promise<Quote[]> {
+    throw new Error();
   }
 
-  async find(): Promise<Quote[]> {
-    return this.datasource.findAllQuotes();
+  async fetch(id: string): Promise<Quote> {
+    throw new Error();
+  }
+
+  async save(body: Quote): Promise<Quote> {
+    throw new Error();
+  }
+
+  async put(id: string, body: Quote): Promise<Quote> {
+    throw new Error();
+  }
+
+  async delete(id: string): Promise<number> {
+    throw new Error();
   }
 }

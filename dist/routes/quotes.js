@@ -39,49 +39,30 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.quotes = void 0;
 var express_1 = __importDefault(require("express"));
-var body_parser_1 = __importDefault(require("body-parser"));
-var quotes_1 = require("./routes/quotes");
-var auth_1 = require("./routes/auth");
-var mongoose_1 = __importDefault(require("mongoose"));
-var middlewares_1 = require("./routes/middlewares");
-var chalk_1 = __importDefault(require("chalk"));
-var init = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var DATABASE_URL, err_1, app;
+var QuoteRepository_1 = require("../infrastructure/repository/QuoteRepository");
+var RetriveAllQuotesUseCase_1 = require("../core/usecases/RetriveAllQuotesUseCase");
+var router = express_1.default.Router();
+exports.quotes = router;
+var repository = new QuoteRepository_1.QuoteRepository();
+router.get('/quotes', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var usecase, response, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                console.log(chalk_1.default.blue('Starting up...'));
-                DATABASE_URL = 'mongodb://127.0.0.1:27017/test';
-                _a.label = 1;
+                _a.trys.push([0, 2, , 3]);
+                usecase = new RetriveAllQuotesUseCase_1.RetriveAllQuotesUseCase(repository);
+                return [4 /*yield*/, usecase.execute()];
             case 1:
-                _a.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, mongoose_1.default.connect(DATABASE_URL, {
-                        useNewUrlParser: true,
-                        useUnifiedTopology: true,
-                        useCreateIndex: true,
-                    })];
-            case 2:
-                _a.sent();
-                console.log(chalk_1.default.green('Conected to MongoDB'));
-                return [3 /*break*/, 4];
-            case 3:
-                err_1 = _a.sent();
-                console.error(err_1);
-                return [3 /*break*/, 4];
-            case 4:
-                app = express_1.default();
-                app.set('port', process.env.PORT || 5000);
-                console.log(chalk_1.default.blue("App Environment: PORT: " + app.get('port') + " CONFIG: DEV "));
-                app.use(body_parser_1.default.json());
-                app.use('/api/auth', auth_1.auth);
-                app.use('/api/admin', quotes_1.quotes);
-                app.use(middlewares_1.errorHandler);
-                app.listen(app.get('port'), function () {
-                    console.log(chalk_1.default.bgGreen.black.bold("Server running..."));
-                });
+                response = _a.sent();
+                res.send(response);
                 return [2 /*return*/];
+            case 2:
+                error_1 = _a.sent();
+                next(error_1);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
         }
     });
-}); };
-init();
+}); });
