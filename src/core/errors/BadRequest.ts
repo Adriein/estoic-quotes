@@ -1,10 +1,12 @@
 import { CustomError } from './CustomError';
 
-export class AlreadyExists extends CustomError {
+export class BadRequest extends CustomError {
   statusCode = 400;
+
   constructor(message: string) {
     super(message);
-    Object.setPrototypeOf(this, AlreadyExists.prototype);
+
+    Object.setPrototypeOf(this, BadRequest.prototype);
   }
 
   serialize() {

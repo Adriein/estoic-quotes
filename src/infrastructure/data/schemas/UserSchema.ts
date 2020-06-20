@@ -3,6 +3,7 @@ import mongoose, { Schema } from 'mongoose';
 export interface UserDoc extends mongoose.Document {
   username: string;
   password: string;
+  email: string;
   creationDate: Date;
 }
 
@@ -14,6 +15,11 @@ const userSchema = new Schema(
       required: true,
     },
     password: {
+      type: String,
+      unique: true,
+      required: true,
+    },
+    email: {
       type: String,
       unique: true,
       required: true,

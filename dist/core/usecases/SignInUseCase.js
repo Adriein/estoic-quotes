@@ -36,64 +36,36 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UserRepository = void 0;
-var schemas_1 = require("../data/schemas");
-var UserMapper_1 = require("../data/mappers/UserMapper");
-var UserRepository = /** @class */ (function () {
-    function UserRepository() {
-        this.mapper = new UserMapper_1.UserMapper();
+exports.SignInUseCase = void 0;
+var entities_1 = require("../entities");
+var errors_1 = require("../errors");
+var helpers_1 = require("../helpers");
+var SignInUseCase = /** @class */ (function () {
+    function SignInUseCase(repository) {
+        this.repository = repository;
     }
-    UserRepository.prototype.find = function () {
+    SignInUseCase.prototype.execute = function (body) {
         return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                throw new Error();
-            });
-        });
-    };
-    UserRepository.prototype.fetch = function (id) {
-        return __awaiter(this, void 0, void 0, function () {
-            var response;
+            var email, password, userOnDB;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, schemas_1.UserModel.findOne({
-                            username: id,
-                        }).exec()];
-                    case 1:
-                        response = _a.sent();
-                        if (response !== null)
-                            return [2 /*return*/, this.mapper.userSchemaToDomainUser(response)];
-                        return [2 /*return*/, {}];
-                }
-            });
-        });
-    };
-    UserRepository.prototype.save = function (body) {
-        return __awaiter(this, void 0, void 0, function () {
-            var _a, _b;
-            return __generator(this, function (_c) {
-                switch (_c.label) {
                     case 0:
-                        _b = (_a = this.mapper).userSchemaToDomainUser;
-                        return [4 /*yield*/, new schemas_1.UserModel(body).save()];
-                    case 1: return [2 /*return*/, _b.apply(_a, [_c.sent()])];
+                        email = body.email, password = body.password;
+                        return [4 /*yield*/, this.repository.fetch(email)];
+                    case 1:
+                        userOnDB = _a.sent();
+                        if (helpers_1.isEmpty(userOnDB))
+                            throw new errors_1.BadRequest('Invalid credentials');
+                        return [4 /*yield*/, helpers_1.compare(userOnDB.password, password)];
+                    case 2:
+                        //Compare the password
+                        if (!(_a.sent()))
+                            throw new errors_1.BadRequest('Invalid Credentials');
+                        return [2 /*return*/, new entities_1.Result([userOnDB])];
                 }
             });
         });
     };
-    UserRepository.prototype.put = function (id, body) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                throw new Error();
-            });
-        });
-    };
-    UserRepository.prototype.delete = function (id) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                throw new Error();
-            });
-        });
-    };
-    return UserRepository;
+    return SignInUseCase;
 }());
-exports.UserRepository = UserRepository;
+exports.SignInUseCase = SignInUseCase;

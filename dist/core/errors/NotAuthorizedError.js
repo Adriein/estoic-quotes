@@ -13,19 +13,19 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AlreadyExists = void 0;
+exports.NotAuthorizedError = void 0;
 var CustomError_1 = require("./CustomError");
-var AlreadyExists = /** @class */ (function (_super) {
-    __extends(AlreadyExists, _super);
-    function AlreadyExists(message) {
-        var _this = _super.call(this, message) || this;
-        _this.statusCode = 400;
-        Object.setPrototypeOf(_this, AlreadyExists.prototype);
+var NotAuthorizedError = /** @class */ (function (_super) {
+    __extends(NotAuthorizedError, _super);
+    function NotAuthorizedError() {
+        var _this = _super.call(this, 'Not Authorized') || this;
+        _this.statusCode = 401;
+        Object.setPrototypeOf(_this, NotAuthorizedError.prototype);
         return _this;
     }
-    AlreadyExists.prototype.serialize = function () {
-        return [{ message: this.message }];
+    NotAuthorizedError.prototype.serialize = function () {
+        return [{ message: 'Not authorized' }];
     };
-    return AlreadyExists;
+    return NotAuthorizedError;
 }(CustomError_1.CustomError));
-exports.AlreadyExists = AlreadyExists;
+exports.NotAuthorizedError = NotAuthorizedError;

@@ -1,9 +1,8 @@
-import mongoose from 'mongoose';
 import { User } from '../../../core/entities';
 import { UserDoc } from '../schemas/UserSchema';
 
 export class UserMapper {
-  userSchemaToDomainUser({ _id, username }: UserDoc): User {
-    return { _id, username } as User;
+  userSchemaToDomainUser({ _id, username, email, password }: UserDoc): User {
+    return { _id, username, email, password } as User;
   }
 }

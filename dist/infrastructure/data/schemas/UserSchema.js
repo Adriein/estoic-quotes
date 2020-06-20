@@ -32,5 +32,10 @@ var userSchema = new mongoose_1.Schema({
         unique: true,
         required: true,
     },
+    email: {
+        type: String,
+        unique: true,
+        required: true,
+    },
 }, { timestamps: true });
 exports.UserModel = mongoose_1.default.model('User', userSchema);

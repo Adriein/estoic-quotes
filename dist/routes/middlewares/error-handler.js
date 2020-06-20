@@ -8,10 +8,10 @@ var errors_1 = require("../../core/errors");
 var chalk_1 = __importDefault(require("chalk"));
 exports.errorHandler = function (err, req, res, next) {
     if (err instanceof errors_1.CustomError) {
-        console.log(chalk_1.default.red.bold("Controled Application " + err));
+        console.log(chalk_1.default.red.bold("Controled Application Error: " + err.message));
         return res
             .status(err.statusCode)
-            .send({ errors: err.serializeErrors() });
+            .send({ errors: err.serialize() });
     }
     console.log(chalk_1.default.red.bold(err));
     res.status(400).send({

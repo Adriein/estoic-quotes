@@ -13,19 +13,19 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AlreadyExists = void 0;
+exports.BadRequest = void 0;
 var CustomError_1 = require("./CustomError");
-var AlreadyExists = /** @class */ (function (_super) {
-    __extends(AlreadyExists, _super);
-    function AlreadyExists(message) {
+var BadRequest = /** @class */ (function (_super) {
+    __extends(BadRequest, _super);
+    function BadRequest(message) {
         var _this = _super.call(this, message) || this;
         _this.statusCode = 400;
-        Object.setPrototypeOf(_this, AlreadyExists.prototype);
+        Object.setPrototypeOf(_this, BadRequest.prototype);
         return _this;
     }
-    AlreadyExists.prototype.serialize = function () {
+    BadRequest.prototype.serialize = function () {
         return [{ message: this.message }];
     };
-    return AlreadyExists;
+    return BadRequest;
 }(CustomError_1.CustomError));
-exports.AlreadyExists = AlreadyExists;
+exports.BadRequest = BadRequest;

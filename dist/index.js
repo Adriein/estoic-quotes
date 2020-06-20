@@ -39,6 +39,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+require('dotenv').config();
 var express_1 = __importDefault(require("express"));
 var body_parser_1 = __importDefault(require("body-parser"));
 var quotes_1 = require("./routes/quotes");
@@ -46,17 +47,17 @@ var auth_1 = require("./routes/auth");
 var mongoose_1 = __importDefault(require("mongoose"));
 var middlewares_1 = require("./routes/middlewares");
 var chalk_1 = __importDefault(require("chalk"));
+var cookie_session_1 = __importDefault(require("cookie-session"));
 var init = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var DATABASE_URL, err_1, app;
+    var err_1, app;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 console.log(chalk_1.default.blue('Starting up...'));
-                DATABASE_URL = 'mongodb://127.0.0.1:27017/test';
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, mongoose_1.default.connect(DATABASE_URL, {
+                return [4 /*yield*/, mongoose_1.default.connect(process.env.DATABASE_URL || '', {
                         useNewUrlParser: true,
                         useUnifiedTopology: true,
                         useCreateIndex: true,
@@ -74,6 +75,10 @@ var init = function () { return __awaiter(void 0, void 0, void 0, function () {
                 app.set('port', process.env.PORT || 5000);
                 console.log(chalk_1.default.blue("App Environment: PORT: " + app.get('port') + " CONFIG: DEV "));
                 app.use(body_parser_1.default.json());
+                app.use(cookie_session_1.default({
+                    signed: false,
+                    secure: false,
+                }));
                 app.use('/api/auth', auth_1.auth);
                 app.use('/api/admin', quotes_1.quotes);
                 app.use(middlewares_1.errorHandler);

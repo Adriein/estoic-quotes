@@ -46,17 +46,25 @@ var RegisterUseCase = /** @class */ (function () {
     }
     RegisterUseCase.prototype.execute = function (body) {
         return __awaiter(this, void 0, void 0, function () {
-            var userOnDB, createdUser;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.repository.fetch(body.username)];
+            var username, password, userOnDB, _a, createdUser;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        username = body.username, password = body.password;
+                        return [4 /*yield*/, this.repository.fetch(username)];
                     case 1:
-                        userOnDB = _a.sent();
+                        userOnDB = _b.sent();
                         if (!helpers_1.isEmpty(userOnDB))
                             throw new errors_1.AlreadyExists('User already exists in DB');
-                        return [4 /*yield*/, this.repository.save(body)];
+                        //Hash the password
+                        _a = body;
+                        return [4 /*yield*/, helpers_1.toHash(password)];
                     case 2:
-                        createdUser = _a.sent();
+                        //Hash the password
+                        _a.password = _b.sent();
+                        return [4 /*yield*/, this.repository.save(body)];
+                    case 3:
+                        createdUser = _b.sent();
                         return [2 /*return*/, new entities_1.Result([createdUser])];
                 }
             });

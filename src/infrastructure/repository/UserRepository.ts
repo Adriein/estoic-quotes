@@ -14,26 +14,15 @@ export class UserRepository implements Repository<User> {
   }
 
   async fetch(id: string): Promise<User> {
-    try {
-      const response = await UserModel.findOne({
-        username: id,
-      }).exec();
-      if (response !== null)
-        return this.mapper.userSchemaToDomainUser(response);
-      return {};
-    } catch (error) {
-      throw error;
-    }
+    const response = await UserModel.findOne({
+      username: id,
+    }).exec();
+    if (response !== null) return this.mapper.userSchemaToDomainUser(response);
+    return {};
   }
 
   async save(body: User): Promise<User> {
-    try {
-      return this.mapper.userSchemaToDomainUser(
-        await new UserModel(body).save()
-      );
-    } catch (error) {
-      throw error;
-    }
+    return this.mapper.userSchemaToDomainUser(await new UserModel(body).save());
   }
 
   async put(id: string, body: User): Promise<User> {

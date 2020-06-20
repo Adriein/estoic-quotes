@@ -1,3 +1,4 @@
+require('dotenv').config();
 import express from 'express';
 import bodyParser from 'body-parser';
 import { quotes } from './routes/quotes';
@@ -5,12 +6,12 @@ import { auth } from './routes/auth';
 import mongoose from 'mongoose';
 import { errorHandler } from './routes/middlewares';
 import chalk from 'chalk';
+import cookieSession from 'cookie-session';
 
 const init = async () => {
   console.log(chalk.blue('Starting up...'));
-  const DATABASE_URL: string = 'mongodb://127.0.0.1:27017/test';
   try {
-    await mongoose.connect(DATABASE_URL, {
+    await mongoose.connect(process.env.DATABASE_URL || '', {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       useCreateIndex: true,
@@ -23,10 +24,17 @@ const init = async () => {
   const app = express();
 
   app.set('port', process.env.PORT || 5000);
-  console.log(chalk.blue(`App Environment: PORT: ${app.get('port')} CONFIG: DEV `));
+  console.log(
+    chalk.blue(`App Environment: PORT: ${app.get('port')} CONFIG: DEV `)
+  );
 
   app.use(bodyParser.json());
-
+  app.use(
+    cookieSession({
+      signed: false,
+      secure: false,
+    })
+  );
   app.use('/api/auth', auth);
   app.use('/api/admin', quotes);
   app.use(errorHandler);

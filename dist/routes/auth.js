@@ -41,13 +41,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.auth = void 0;
 var express_1 = __importDefault(require("express"));
+var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 var usecases_1 = require("../core/usecases");
 var repository_1 = require("../infrastructure/repository");
+var helpers_1 = require("../core/helpers");
 var router = express_1.default.Router();
 exports.auth = router;
 var repository = new repository_1.UserRepository();
 router.post('/register', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var usecase, response, error_1;
+    var usecase, user, _id, email, username, userJwt, secureUser, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -55,12 +57,54 @@ router.post('/register', function (req, res, next) { return __awaiter(void 0, vo
                 usecase = new usecases_1.RegisterUseCase(repository);
                 return [4 /*yield*/, usecase.execute(req.body)];
             case 1:
-                response = _a.sent();
-                res.send(response.data);
+                user = (_a.sent()).data[0];
+                _id = user._id, email = user.email, username = user.username;
+                userJwt = jsonwebtoken_1.default.sign({
+                    id: _id,
+                    email: email,
+                    username: username,
+                }, process.env.JWT_KEY);
+                // Store it on session object
+                req.session = {
+                    jwt: userJwt,
+                };
+                secureUser = helpers_1.maskFields(user, ['password']);
+                res.status(201).send(secureUser);
                 return [3 /*break*/, 3];
             case 2:
                 error_1 = _a.sent();
                 next(error_1);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); });
+router.post('/signin', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var usecase, user, _id, email, username, userJwt, secureUser, error_2;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                usecase = new usecases_1.SignInUseCase(repository);
+                return [4 /*yield*/, usecase.execute(req.body)];
+            case 1:
+                user = (_a.sent()).data[0];
+                _id = user._id, email = user.email, username = user.username;
+                userJwt = jsonwebtoken_1.default.sign({
+                    id: _id,
+                    email: email,
+                    username: username,
+                }, process.env.JWT_KEY);
+                // Store it on session object
+                req.session = {
+                    jwt: userJwt,
+                };
+                secureUser = helpers_1.maskFields(user, ['password']);
+                res.status(200).send(secureUser);
+                return [3 /*break*/, 3];
+            case 2:
+                error_2 = _a.sent();
+                next(error_2);
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }

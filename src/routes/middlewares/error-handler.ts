@@ -9,10 +9,10 @@ export const errorHandler = (
   next: NextFunction
 ) => {
   if (err instanceof CustomError) {
-    console.log(chalk.red.bold(`Controled Application ${err}`));
+    console.log(chalk.red.bold(`Controled Application Error: ${err.message}`));
     return res
       .status(err.statusCode)
-      .send({ errors: err.serializeErrors() });
+      .send({ errors: err.serialize() });
   }
 
   console.log(chalk.red.bold(err));
