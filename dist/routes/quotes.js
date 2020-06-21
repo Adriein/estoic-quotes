@@ -42,17 +42,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.quotes = void 0;
 var express_1 = __importDefault(require("express"));
 var QuoteRepository_1 = require("../infrastructure/repository/QuoteRepository");
-var RetriveAllQuotesUseCase_1 = require("../core/usecases/RetriveAllQuotesUseCase");
+var usecases_1 = require("../core/usecases");
+var auth_1 = require("./middlewares/auth");
 var router = express_1.default.Router();
 exports.quotes = router;
 var repository = new QuoteRepository_1.QuoteRepository();
-router.get('/quotes', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.get('/quotes', auth_1.requireAuth, function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var usecase, response, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                usecase = new RetriveAllQuotesUseCase_1.RetriveAllQuotesUseCase(repository);
+                usecase = new usecases_1.RetriveAllQuotesUseCase(repository);
                 return [4 /*yield*/, usecase.execute()];
             case 1:
                 response = _a.sent();

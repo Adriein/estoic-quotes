@@ -9,7 +9,8 @@ export class SignInUseCase implements UseCase<User> {
     const { email, password } = body;
 
     //Check if the user exists
-    const userOnDB = await this.repository.fetch(email!);
+    const [userOnDB] = await this.repository.find({ email });
+    
     if (isEmpty(userOnDB)) throw new BadRequest('Invalid credentials');
 
     //Compare the password

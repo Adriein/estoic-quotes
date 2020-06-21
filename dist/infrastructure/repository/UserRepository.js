@@ -43,10 +43,18 @@ var UserRepository = /** @class */ (function () {
     function UserRepository() {
         this.mapper = new UserMapper_1.UserMapper();
     }
-    UserRepository.prototype.find = function () {
+    UserRepository.prototype.find = function (searchObj) {
         return __awaiter(this, void 0, void 0, function () {
+            var user;
             return __generator(this, function (_a) {
-                throw new Error();
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, schemas_1.UserModel.find(searchObj).exec()];
+                    case 1:
+                        user = (_a.sent())[0];
+                        if (!user)
+                            return [2 /*return*/, [{}]];
+                        return [2 /*return*/, [this.mapper.userSchemaToDomainUser(user)]];
+                }
             });
         });
     };

@@ -51,9 +51,9 @@ var SignInUseCase = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         email = body.email, password = body.password;
-                        return [4 /*yield*/, this.repository.fetch(email)];
+                        return [4 /*yield*/, this.repository.find({ email: email })];
                     case 1:
-                        userOnDB = _a.sent();
+                        userOnDB = (_a.sent())[0];
                         if (helpers_1.isEmpty(userOnDB))
                             throw new errors_1.BadRequest('Invalid credentials');
                         return [4 /*yield*/, helpers_1.compare(userOnDB.password, password)];

@@ -1,9 +1,18 @@
 import { Quote } from '../../core/entities/Quote';
 import { Repository } from '../../core/entities/Repository';
+import { QuoteModel } from '../data/schemas/QuoteSchema';
+import { QuoteMapper } from '../data/mappers';
 
 export class QuoteRepository implements Repository<Quote> {
-  async find(): Promise<Quote[]> {
-    throw new Error();
+  private mapper: QuoteMapper;
+
+  constructor() {
+    this.mapper = new QuoteMapper();
+  }
+  async find(searchObj: any): Promise<Quote[]> {
+    return this.mapper.quoteSchemaToDomainQuote(
+      await QuoteModel.find(searchObj).exec()
+    );
   }
 
   async fetch(id: string): Promise<Quote> {

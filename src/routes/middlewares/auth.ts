@@ -16,34 +16,42 @@ declare global {
   }
 }
 
-export const currentUser = (
+// export const currentUser = (
+//   req: Request,
+//   res: Response,
+//   next: NextFunction
+// ) => {
+//   if (!req.session?.jwt) {
+//     return next();
+//   }
+
+//   try {
+//     const payload = jwt.verify(
+//       req.session.jwt,
+//       process.env.JWT_KEY!
+//     ) as UserPayload;
+//     req.currentUser = payload;
+//   } catch (err) {}
+
+//   next();
+// };
+
+export const requireAuth = (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   if (!req.session?.jwt) {
-    return next();
+    throw new NotAuthorizedError();
   }
-
   try {
     const payload = jwt.verify(
       req.session.jwt,
       process.env.JWT_KEY!
     ) as UserPayload;
     req.currentUser = payload;
-  } catch (err) {}
-
-  next();
-};
-
-export const requireAuth = (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
-    if (!req.currentUser) {
-      throw new NotAuthorizedError();
-    }
-  
     next();
-  };
+  } catch (err) {
+    throw new NotAuthorizedError();
+  }
+};

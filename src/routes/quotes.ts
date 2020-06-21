@@ -1,15 +1,15 @@
-import { Router, Request, Response, NextFunction } from 'express';
-import express from 'express';
-import { Repository } from '../core/entities/Repository';
+import express, { Router, Request, Response, NextFunction } from 'express';
 import { QuoteRepository } from '../infrastructure/repository/QuoteRepository';
-import { Quote } from '../core/entities/Quote';
-import { RetriveAllQuotesUseCase } from '../core/usecases/RetriveAllQuotesUseCase';
+import { Quote, Repository } from '../core/entities';
+import { RetriveAllQuotesUseCase } from '../core/usecases';
+import { requireAuth } from './middlewares/auth';
 
 const router: Router = express.Router();
 const repository: Repository<Quote> = new QuoteRepository();
 
 router.get(
   '/quotes',
+  requireAuth,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const usecase = new RetriveAllQuotesUseCase(repository);

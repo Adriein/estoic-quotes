@@ -37,16 +37,20 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RetriveAllQuotesUseCase = void 0;
+var entities_1 = require("../entities");
 var RetriveAllQuotesUseCase = /** @class */ (function () {
     function RetriveAllQuotesUseCase(repository) {
         this.repository = repository;
     }
-    RetriveAllQuotesUseCase.prototype.execute = function () {
+    RetriveAllQuotesUseCase.prototype.execute = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.repository.find()];
-                    case 1: return [2 /*return*/, _a.sent()];
+            var _a;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _a = entities_1.Result.bind;
+                        return [4 /*yield*/, this.repository.find({})];
+                    case 1: return [2 /*return*/, new (_a.apply(entities_1.Result, [void 0, _b.sent()]))()];
                 }
             });
         });

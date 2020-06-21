@@ -66,7 +66,7 @@ router.post(
         jwt: userJwt,
       };
 
-      //Mask dangerous fields
+      //Mask dangerous fields 
       const secureUser = maskFields(user, ['password']);
       
       res.status(200).send(secureUser);

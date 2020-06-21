@@ -37,13 +37,22 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.QuoteRepository = void 0;
+var QuoteSchema_1 = require("../data/schemas/QuoteSchema");
+var mappers_1 = require("../data/mappers");
 var QuoteRepository = /** @class */ (function () {
     function QuoteRepository() {
+        this.mapper = new mappers_1.QuoteMapper();
     }
-    QuoteRepository.prototype.find = function () {
+    QuoteRepository.prototype.find = function (searchObj) {
         return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                throw new Error();
+            var _a, _b;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
+                    case 0:
+                        _b = (_a = this.mapper).quoteSchemaToDomainQuote;
+                        return [4 /*yield*/, QuoteSchema_1.QuoteModel.find(searchObj).exec()];
+                    case 1: return [2 /*return*/, _b.apply(_a, [_c.sent()])];
+                }
             });
         });
     };

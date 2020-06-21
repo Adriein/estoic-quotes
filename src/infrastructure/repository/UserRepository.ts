@@ -9,8 +9,10 @@ export class UserRepository implements Repository<User> {
     this.mapper = new UserMapper();
   }
 
-  async find(): Promise<User[]> {
-    throw new Error();
+  async find(searchObj: any): Promise<User[]> {
+    const [user] = await UserModel.find(searchObj).exec();
+    if (!user) return [{}];
+    return [this.mapper.userSchemaToDomainUser(user)];
   }
 
   async fetch(id: string): Promise<User> {
