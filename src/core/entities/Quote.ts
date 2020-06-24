@@ -3,5 +3,6 @@ export interface Quote {
   author?: string;
   topic?: string;
   quote?: string;
+  origin?: string;
   creationDate?: Date;
 }

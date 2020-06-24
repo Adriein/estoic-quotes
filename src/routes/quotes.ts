@@ -1,7 +1,12 @@
 import express, { Router, Request, Response, NextFunction } from 'express';
 import { QuoteRepository } from '../infrastructure/repository/QuoteRepository';
 import { Quote, Repository } from '../core/entities';
-import { RetriveAllQuotesUseCase } from '../core/usecases';
+import {
+  RetriveAllQuotesUseCase,
+  ReadQuoteUseCase,
+  CreateQuoteUseCase,
+  ModifyQuoteUseCase,
+} from '../core/usecases';
 import { requireAuth } from './middlewares/auth';
 
 const router: Router = express.Router();
@@ -14,49 +19,55 @@ router.get(
     try {
       const usecase = new RetriveAllQuotesUseCase(repository);
       const response = await usecase.execute();
-      res.send(response);
+      res.send(response.data);
       return;
     } catch (error) {
       next(error);
     }
   }
 );
-//   .get(
-//     '/quote/:id',
-//     async (req: Request, res: Response, next: NextFunction) => {
-//       try {
-//         const usecase = new UsersReadUseCase(database);
-//         const response = await usecase.execute(parseInt(req.params.id));
-//         res.send(response.getData());
-//         return;
-//       } catch (error) {
-//         next(error);
-//       }
-//     }
-//   )
-//   .post('/quote', async (req: Request, res: Response, next: NextFunction) => {
-//     try {
-//       const usecase = new UsersCreateUseCase(database);
-//       const response = await usecase.execute(undefined, req.body);
-//       res.send(response.getData());
-//       return;
-//     } catch (error) {
-//       next(error);
-//     }
-//   })
-//   .put(
-//     '/quote/:id',
-//     async (req: Request, res: Response, next: NextFunction) => {
-//       try {
-//         const usecase = new UsersModifyUseCase(database);
-//         const response = await usecase.execute(parseInt(req.params.id), req.body);
-//         res.send(response.getData());
-//         return;
-//       } catch (error) {
-//         next(error);
-//       }
-//     }
-//   )
+router.get(
+  '/quote/:id',
+  requireAuth,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const usecase = new ReadQuoteUseCase(repository);
+      const response = await usecase.execute(req.params.id);
+      res.send(response.data);
+      return;
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+router.post(
+  '/quote',
+  requireAuth,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const usecase = new CreateQuoteUseCase(repository);
+      const response = await usecase.execute(req.body);
+      res.send(response.data);
+      return;
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+router.put(
+  '/quote',
+  requireAuth,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const usecase = new ModifyQuoteUseCase(repository);
+      const response = await usecase.execute(req.body);
+      res.send(response.data);
+      return;
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 //   .delete('/quote/:id', async (req: Request, res: Response) => {
 //     return;
 //   });

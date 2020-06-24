@@ -10,21 +10,26 @@ export class QuoteRepository implements Repository<Quote> {
     this.mapper = new QuoteMapper();
   }
   async find(searchObj: any): Promise<Quote[]> {
-    return this.mapper.quoteSchemaToDomainQuote(
+    return this.mapper.quotesSchemaToDomainQuotes(
       await QuoteModel.find(searchObj).exec()
     );
   }
 
   async fetch(id: string): Promise<Quote> {
-    throw new Error();
+    const quote = await QuoteModel.findById(id).exec();
+    if (quote !== null) return this.mapper.quoteSchemaToDomainQuote(quote);
+    return {};
   }
 
   async save(body: Quote): Promise<Quote> {
-    throw new Error();
+    return this.mapper.quoteSchemaToDomainQuote(
+      await new QuoteModel(body).save()
+    );
   }
 
   async put(id: string, body: Quote): Promise<Quote> {
-    throw new Error();
+    await QuoteModel.updateOne({ _id: id }, body);
+    return await this.fetch(id);
   }
 
   async delete(id: string): Promise<number> {

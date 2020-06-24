@@ -4,6 +4,7 @@ export interface QuoteDoc extends mongoose.Document {
   topic: string;
   author: string;
   quote: string;
+  origin: string;
   creationDate: Date;
 }
 
@@ -18,6 +19,10 @@ const quoteSchema = new Schema(
       required: true,
     },
     quote: {
+      type: String,
+      required: true,
+    },
+    origin: {
       type: String,
       required: true,
     },

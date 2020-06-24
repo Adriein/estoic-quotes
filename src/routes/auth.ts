@@ -13,7 +13,7 @@ router.post(
     try {
       //Creating the user
       const usecase = new RegisterUseCase(repository);
-      const [user] = (await usecase.execute(req.body)).data;
+      const [user] = (await usecase.execute(req.body)).data as User[];
 
       const { _id, email, username } = user;
 
@@ -47,7 +47,7 @@ router.post(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const usecase = new SignInUseCase(repository);
-      const [user] = (await usecase.execute(req.body)).data;
+      const [user] = (await usecase.execute(req.body)).data as User[];
 
       const { _id, email, username } = user;
 
@@ -66,9 +66,9 @@ router.post(
         jwt: userJwt,
       };
 
-      //Mask dangerous fields 
+      //Mask dangerous fields
       const secureUser = maskFields(user, ['password']);
-      
+
       res.status(200).send(secureUser);
     } catch (error) {
       next(error);
