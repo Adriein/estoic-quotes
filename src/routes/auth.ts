@@ -67,9 +67,9 @@ router.post(
       };
 
       //Mask dangerous fields
-      const secureUser = maskFields(user, ['password']);
+      const securedUser = maskFields(user, ['password']);
 
-      res.status(200).send(secureUser);
+      res.status(200).send([securedUser]);
     } catch (error) {
       next(error);
     }

@@ -49,7 +49,7 @@ export const requireAuth = (
       req.session.jwt,
       process.env.JWT_KEY!
     ) as UserPayload;
-    req.currentUser = payload;
+    req.session = payload;
     next();
   } catch (err) {
     throw new NotAuthorizedError();

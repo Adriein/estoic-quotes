@@ -33,6 +33,7 @@ const init = async () => {
     cookieSession({
       signed: false,
       secure: false,
+      maxAge: 60000,
     })
   );
   app.use('/api/auth', auth);
