@@ -8,13 +8,21 @@ const defaultAuth = {
   id: '',
   username: '',
   email: '',
-  loggedIn: false,
-  errormsg: '',
+  token: undefined,
+  errormsg: undefined,
 };
 export function AuthProvider(props) {
   const [auth, dispatch] = useReducer(authReducer, defaultAuth);
+  const getToken = () => {
+    const cookie = document.cookie
+      .split('; ')
+      .find((row) => row.startsWith('express'));
+    if (cookie) return cookie.split('=')[1];
+
+    return undefined;
+  };
   return (
-    <AuthContext.Provider value={auth}>
+    <AuthContext.Provider value={{auth, getToken}}>
       <DispatchContext.Provider value={dispatch}>
         {props.children}
       </DispatchContext.Provider>

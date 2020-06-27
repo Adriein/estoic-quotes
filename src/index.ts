@@ -7,6 +7,7 @@ import mongoose from 'mongoose';
 import { errorHandler } from './routes/middlewares';
 import chalk from 'chalk';
 import cookieSession from 'cookie-session';
+import path from 'path';
 
 const init = async () => {
   console.log(chalk.blue('Starting up...'));
@@ -33,12 +34,21 @@ const init = async () => {
     cookieSession({
       signed: false,
       secure: false,
-      maxAge: 60000,
+      maxAge: 900000,
+      httpOnly: false,
     })
   );
   app.use('/api/auth', auth);
   app.use('/api/admin', quotes);
   app.use(errorHandler);
+
+  if (process.env.NODE_ENV === 'pro') {
+    app.use(express.static('client/build'));
+
+    app.get('*', (req, res) => {
+      res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+    });
+  }
 
   app.listen(app.get('port'), () => {
     console.log(chalk.bgGreen.black.bold(`Server running...`));

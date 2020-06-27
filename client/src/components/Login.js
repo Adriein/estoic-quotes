@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -12,6 +12,17 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import useInputState from '../hooks/useInputState';
+import { DispatchContext } from '../context/AuthContext';
+import axios from 'axios';
+import { AuthContext } from '../context/AuthContext';
+import { Redirect } from 'react-router-dom';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 function Copyright() {
   return (
@@ -46,8 +57,35 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Login() {
+export default function Login(props) {
   const classes = useStyles();
+  const dispatch = useContext(DispatchContext);
+  const {auth, getToken} = useContext(AuthContext);
+  const [value, handleChange, reset] = useInputState({
+    email: '',
+    password: '',
+  });
+
+  if (getToken()) {
+    return <Redirect to="/dashboard" />;
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('api/auth/signin', value);
+      dispatch({
+        type: 'LOGIN',
+        response,
+      });
+      reset();
+    } catch (error) {
+      dispatch({
+        type: 'LOGIN_ERROR',
+        error: error.response.data.errors,
+      });
+    }
+  };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -59,7 +97,7 @@ export default function Login() {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} noValidate onSubmit={handleSubmit}>
           <TextField
             variant="outlined"
             margin="normal"
@@ -70,6 +108,8 @@ export default function Login() {
             name="email"
             autoComplete="email"
             autoFocus
+            onChange={handleChange}
+            value={value.email}
           />
           <TextField
             variant="outlined"
@@ -81,6 +121,8 @@ export default function Login() {
             type="password"
             id="password"
             autoComplete="current-password"
+            onChange={handleChange}
+            value={value.password}
           />
           {/* <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
@@ -109,6 +151,9 @@ export default function Login() {
           </Grid>
         </form>
       </div>
+      <Snackbar open={auth.errormsg ? true : false} autoHideDuration={6000}>
+        <Alert severity="error">{auth.errormsg}</Alert>
+      </Snackbar>
       <Box mt={8}>
         <Copyright />
       </Box>
