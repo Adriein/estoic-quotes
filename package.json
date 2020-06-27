@@ -10,10 +10,10 @@
   "scripts": {
     "dev": "concurrently \"node ./dist/index.js\" \"npm start --prefix client\"",
     "server": "concurrently \"npm run build\" \"nodemon ./dist/index.js\"",
-    "build": "tsc -w",
+    "build": "tsc",
     "debug": "tsc",
     "start": "node ./dist/index.js",
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client && npm run build"
   },
   "keywords": [],
   "author": "",
