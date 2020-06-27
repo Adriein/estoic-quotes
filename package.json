@@ -8,12 +8,12 @@
     "npm": "6.9.0"
   },
   "scripts": {
-    "dev": "concurrently \"node ./dist/index.js\" \"npm start --prefix client\"",
-    "server": "concurrently \"npm run build\" \"nodemon ./dist/index.js\"",
+    "dev": "concurrently \"tsc && node ./dist/index.js\" \"npm start --prefix client\"",
+    "server": "concurrently \"npm run debug\" \"nodemon ./dist/index.js\"",
     "build": "tsc",
-    "debug": "tsc",
+    "debug": "tsc -w",
     "start": "node ./dist/index.js",
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client && npm run build"
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client npm run build"
   },
   "keywords": [],
   "author": "",
