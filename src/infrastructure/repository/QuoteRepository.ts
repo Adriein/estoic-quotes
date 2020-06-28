@@ -1,13 +1,19 @@
-import { Quote } from '../../core/entities/Quote';
-import { Repository } from '../../core/entities/Repository';
+import {
+  Quote,
+  QuoteRepository as Repository,
+  Translation,
+} from '../../core/entities';
 import { QuoteModel } from '../data/schemas/QuoteSchema';
-import { QuoteMapper } from '../data/mappers';
+import { QuoteMapper, TranslationMapper } from '../data/mappers';
+import { TranslationModel } from '../data/schemas/TranslationSchema';
 
 export class QuoteRepository implements Repository<Quote> {
   private mapper: QuoteMapper;
+  private transMapper: TranslationMapper;
 
   constructor() {
     this.mapper = new QuoteMapper();
+    this.transMapper = new TranslationMapper();
   }
   async find(searchObj: any): Promise<Quote[]> {
     return this.mapper.quotesSchemaToDomainQuotes(
@@ -33,6 +39,18 @@ export class QuoteRepository implements Repository<Quote> {
   }
 
   async delete(id: string): Promise<number> {
+    throw new Error();
+  }
+
+  async saveTranslation(translation: Translation): Promise<void> {
+    const translationSchema = this.transMapper.domainTranslationToSchemaTranslation(
+      translation
+    );
+
+    await new TranslationModel(translationSchema).save();
+  }
+
+  async updateTranslation(id: string, translation: string): Promise<void> {
     throw new Error();
   }
 }

@@ -5,14 +5,7 @@ export const QuotesContext = createContext();
 export const DispatchContext = createContext();
 
 const defaultQuotes = {
-    topic: '',
-    translatedTopic: '',
-    author: '',
-    translatedAuthor: '',
-    quote: '',
-    translatedQuote: '',
-    origin: '',
-    translatedOrigin: '',
+  quotes: [],
 };
 export function QuotesProvider(props) {
   const [quotes, dispatch] = useReducer(quotesReducer, defaultQuotes);

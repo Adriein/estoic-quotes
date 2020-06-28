@@ -1,6 +1,6 @@
 import express, { Router, Request, Response, NextFunction } from 'express';
 import { QuoteRepository } from '../infrastructure/repository/QuoteRepository';
-import { Quote, Repository } from '../core/entities';
+import { Quote, QuoteRepository as Repository } from '../core/entities';
 import {
   RetriveAllQuotesUseCase,
   ReadQuoteUseCase,

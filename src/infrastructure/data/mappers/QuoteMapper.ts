@@ -9,7 +9,6 @@ export class QuoteMapper {
         author: quote.author,
         topic: quote.topic,
         quote: quote.quote,
-        translatedQuote: quote.translatedQuote,
         origin: quote.origin,
         creationDate: quote.creationDate,
       };
@@ -22,7 +21,6 @@ export class QuoteMapper {
       author: quote.author,
       topic: quote.topic,
       quote: quote.quote,
-      translatedQuote: quote.translatedQuote,
       origin: quote.origin,
       creationDate: quote.creationDate,
     } as Quote;

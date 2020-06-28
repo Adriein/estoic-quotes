@@ -5,3 +5,4 @@ export * from './ReadQuoteUseCase';
 export * from './CreateQuoteUseCase';
 export * from './ModifyQuoteUseCase';
 export * from './DeleteQuoteUseCase';
+export * from './RetriveMasterDataUseCase';

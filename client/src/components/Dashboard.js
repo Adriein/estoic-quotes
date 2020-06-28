@@ -118,16 +118,15 @@ export function Dashboard() {
 
   const handleSubmit = async (e) => {
     try {
-      // const response = await axios.post('api/auth/signin', value);
-      // dispatch({
-      //   type: 'LOGIN',
-      //   response,
-      // });
-      console.log(value)
+      const response = await axios.post('api/auth/quote', value);
+      dispatch({
+        type: 'POST_QUOTE',
+        response,
+      });
       reset();
     } catch (error) {
       dispatch({
-        type: 'LOGIN_ERROR',
+        type: 'ERROR',
         error: error.response.data.errors,
       });
     }

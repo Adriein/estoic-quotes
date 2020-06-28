@@ -3,6 +3,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import { quotes } from './routes/quotes';
 import { auth } from './routes/auth';
+import { masterData } from './routes/master-data';
 import mongoose from 'mongoose';
 import { errorHandler } from './routes/middlewares';
 import chalk from 'chalk';
@@ -40,6 +41,8 @@ const init = async () => {
   );
   app.use('/api/auth', auth);
   app.use('/api/admin', quotes);
+  app.use('/api/admin', quotes);
+  app.use('/api/admin', masterData);
   app.use(errorHandler);
   
   if (process.env.NODE_ENV === 'pro') {
