@@ -29,7 +29,7 @@ function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
+      <Link color="inherit" href=" https://stoic-quo.herokuapp.com/">
         Stoic Quotes
       </Link>{' '}
       {new Date().getFullYear()}

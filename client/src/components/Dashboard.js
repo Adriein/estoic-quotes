@@ -1,25 +1,28 @@
 import React, { useContext } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
-import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
-import TextField from '@material-ui/core/TextField';
 import SaveAltIcon from '@material-ui/icons/SaveAlt';
 import Grid from '@material-ui/core/Grid';
 
+
 import { AuthContext, DispatchContext } from '../context/AuthContext';
+import useInputState from '../hooks/useInputState';
 import axios from 'axios';
+import QuotesForm from './QuotesForm';
 
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
+      <Link color="inherit" href=" https://stoic-quo.herokuapp.com/">
         Stoic Quotes
       </Link>{' '}
       {new Date().getFullYear()}
@@ -48,6 +51,9 @@ const useStyles = makeStyles((theme) => ({
   link: {
     margin: theme.spacing(1, 1.5),
   },
+  save: {
+    paddingTop: theme.spacing(3),
+  },
   heroContent: {
     padding: theme.spacing(8, 0, 6),
   },
@@ -65,7 +71,7 @@ const useStyles = makeStyles((theme) => ({
   },
   footer: {
     borderTop: `1px solid ${theme.palette.divider}`,
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(0),
     paddingTop: theme.spacing(3),
     paddingBottom: theme.spacing(3),
     [theme.breakpoints.up('sm')]: {
@@ -73,12 +79,27 @@ const useStyles = makeStyles((theme) => ({
       paddingBottom: theme.spacing(6),
     },
   },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+  },
 }));
 
 export function Dashboard() {
   const { auth } = useContext(AuthContext);
   const dispatch = useContext(DispatchContext);
   const classes = useStyles();
+
+  const [value, handleChange, reset] = useInputState({
+    topic: '',
+    translatedTopic: '',
+    author: '',
+    translatedAuthor: '',
+    quote: '',
+    translatedQuote: '',
+    origin: '',
+    translatedOrigin: '',
+  });
 
   const handleLogout = async (e) => {
     try {
@@ -94,6 +115,24 @@ export function Dashboard() {
       });
     }
   };
+
+  const handleSubmit = async (e) => {
+    try {
+      // const response = await axios.post('api/auth/signin', value);
+      // dispatch({
+      //   type: 'LOGIN',
+      //   response,
+      // });
+      console.log(value)
+      reset();
+    } catch (error) {
+      dispatch({
+        type: 'LOGIN_ERROR',
+        error: error.response.data.errors,
+      });
+    }
+  };
+
   return (
     <React.Fragment>
       <CssBaseline />
@@ -124,45 +163,24 @@ export function Dashboard() {
       </AppBar>
       {/* Hero unit */}
       <Container maxWidth="md" component="main" className={classes.heroContent}>
-        <Typography
-          variant="h6"
-          align="center"
-          color="textPrimary"
-          gutterBottom
-        >
-          Original Quote
-        </Typography>
-        <TextField
-          id="outlined-multiline-static"
-          label="Original quote"
-          multiline
-          rows={4}
-          defaultValue="Default Value"
-          variant="outlined"
-          fullWidth
-        />
+        <QuotesForm value={value} handleChange={handleChange} lang={'en'}/>
       </Container>
       {/* End hero unit */}
       <Container maxWidth="md" component="main" className={classes.heroContent}>
-        <Typography
-          variant="h6"
-          align="center"
-          color="textPrimary"
-          gutterBottom
+        <QuotesForm value={value} handleChange={handleChange} lang={'es'}/>
+        <Grid
+          container
+          justify="center"
+          alignItems="center"
+          className={classes.save}
         >
-          Translated Quote
-        </Typography>
-        <TextField
-          id="outlined-multiline-static"
-          label="Translated quote"
-          multiline
-          rows={4}
-          defaultValue="Default Value"
-          variant="outlined"
-          fullWidth
-        />
-        <Grid container justify="center" alignItems="center" className={classes.link}>
-          <Button variant="contained" color="primary" endIcon={<SaveAltIcon />}>
+          <Button
+            variant="contained"
+            color="primary"
+            size="large"
+            endIcon={<SaveAltIcon />}
+            onClick={handleSubmit}
+          >
             Save
           </Button>
         </Grid>
