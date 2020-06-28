@@ -12,11 +12,22 @@ const reducer = (state, action) => {
         id: '',
         username: '',
         email: '',
-        token: undefined,
-        errormsg: /*action.error[0].message*/'Invalid Credentials',
+        errormsg: action.error[0].message,
       };
     case 'LOGOUT':
-      return state;
+      return {
+        id: '',
+        username: '',
+        email: '',
+        errormsg: undefined,
+      };
+    case 'LOGOUT_ERROR':
+      return {
+        id: '',
+        username: '',
+        email: '',
+        errormsg: action.error[0].message,
+      };
     default:
       return state;
   }

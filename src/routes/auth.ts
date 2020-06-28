@@ -4,6 +4,7 @@ import { Repository, User } from '../core/entities';
 import { RegisterUseCase, SignInUseCase } from '../core/usecases';
 import { UserRepository } from '../infrastructure/repository';
 import { maskFields } from '../core/helpers';
+import { requireAuth } from './middlewares/auth';
 
 const router: Router = express.Router();
 const repository: Repository<User> = new UserRepository();
@@ -70,6 +71,20 @@ router.post(
       const securedUser = maskFields(user, ['password']);
 
       res.status(200).send([securedUser]);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.post(
+  '/signout',
+  requireAuth,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      // Signout the user
+      req.session = null;
+      res.status(200).send({});
     } catch (error) {
       next(error);
     }

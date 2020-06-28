@@ -8,8 +8,12 @@ import Link from '@material-ui/core/Link';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
+import TextField from '@material-ui/core/TextField';
+import SaveAltIcon from '@material-ui/icons/SaveAlt';
+import Grid from '@material-ui/core/Grid';
 
-import { AuthContext } from '../context/AuthContext';
+import { AuthContext, DispatchContext } from '../context/AuthContext';
+import axios from 'axios';
 
 function Copyright() {
   return (
@@ -72,9 +76,24 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export function Dashboard() {
-  const auth = useContext(AuthContext);
+  const { auth } = useContext(AuthContext);
+  const dispatch = useContext(DispatchContext);
   const classes = useStyles();
 
+  const handleLogout = async (e) => {
+    try {
+      const response = await axios.post('api/auth/signout');
+      dispatch({
+        type: 'LOGOUT',
+        response,
+      });
+    } catch (error) {
+      dispatch({
+        type: 'LOGOUT_ERROR',
+        error: error.response.data.errors,
+      });
+    }
+  };
   return (
     <React.Fragment>
       <CssBaseline />
@@ -94,36 +113,59 @@ export function Dashboard() {
             Welcome: {auth.username}
           </Typography>
           <Button
-            href="#"
             color="primary"
             variant="outlined"
             className={classes.link}
+            onClick={handleLogout}
           >
             Logout
           </Button>
         </Toolbar>
       </AppBar>
       {/* Hero unit */}
-      <Container maxWidth="sm" component="main" className={classes.heroContent}>
+      <Container maxWidth="md" component="main" className={classes.heroContent}>
         <Typography
           variant="h6"
           align="center"
           color="textPrimary"
           gutterBottom
         >
-          Content original
+          Original Quote
         </Typography>
+        <TextField
+          id="outlined-multiline-static"
+          label="Original quote"
+          multiline
+          rows={4}
+          defaultValue="Default Value"
+          variant="outlined"
+          fullWidth
+        />
       </Container>
       {/* End hero unit */}
-      <Container maxWidth="md" component="main">
+      <Container maxWidth="md" component="main" className={classes.heroContent}>
         <Typography
           variant="h6"
           align="center"
           color="textPrimary"
           gutterBottom
         >
-          Content traducido
+          Translated Quote
         </Typography>
+        <TextField
+          id="outlined-multiline-static"
+          label="Translated quote"
+          multiline
+          rows={4}
+          defaultValue="Default Value"
+          variant="outlined"
+          fullWidth
+        />
+        <Grid container justify="center" alignItems="center" className={classes.link}>
+          <Button variant="contained" color="primary" endIcon={<SaveAltIcon />}>
+            Save
+          </Button>
+        </Grid>
       </Container>
       {/* Footer */}
       <Container maxWidth="md" component="footer" className={classes.footer}>

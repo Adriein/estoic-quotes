@@ -41,6 +41,7 @@ const init = async () => {
   app.use('/api/auth', auth);
   app.use('/api/admin', quotes);
   app.use(errorHandler);
+  
   if (process.env.NODE_ENV === 'pro') {
     app.use(express.static('client/build'));
 

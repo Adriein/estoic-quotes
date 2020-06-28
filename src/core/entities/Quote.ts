@@ -4,5 +4,6 @@ export interface Quote {
   topic?: string;
   quote?: string;
   origin?: string;
+  translatedQuote?: string;
   creationDate?: Date;
 }
