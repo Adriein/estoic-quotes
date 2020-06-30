@@ -47,6 +47,7 @@ router.post(
     try {
       const usecase = new CreateQuoteUseCase(repository);
       const response = await usecase.execute(req.body);
+      
       res.send(response.data);
       return;
     } catch (error) {

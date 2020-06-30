@@ -50,7 +50,11 @@ export class QuoteRepository implements Repository<Quote> {
     await new TranslationModel(translationSchema).save();
   }
 
-  async updateTranslation(id: string, translation: string): Promise<void> {
-    throw new Error();
+  async updateTranslation(id: string, translation: Translation): Promise<void> {
+    const translationSchema = this.transMapper.domainTranslationToSchemaTranslation(
+      translation
+    );
+
+    await TranslationModel.updateOne({ _id: id }, translationSchema);
   }
 }

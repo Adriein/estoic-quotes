@@ -2,17 +2,21 @@ import React from 'react';
 import '../App.css';
 import { BrowserRouter, Route } from 'react-router-dom';
 import { AuthProvider } from '../context/AuthContext';
+import { QuotesProvider } from '../context/QuotesContext';
 import { ProtectedRoute } from './ProtectedRoute';
 
 import Login from './Login';
 import Dashboard from './Dashboard';
+
 
 function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
         <Route path="/" exact component={Login} />
-        <ProtectedRoute path="/dashboard" exact component={Dashboard} />
+        <QuotesProvider>
+          <ProtectedRoute path="/dashboard" exact component={Dashboard} />
+        </QuotesProvider>
       </AuthProvider>
     </BrowserRouter>
   );

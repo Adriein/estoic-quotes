@@ -1,19 +1,19 @@
 import React, { createContext, useReducer } from 'react';
-import quotesReducer from '../reducers/quotesReducer.js';
+import reducer from '../reducers/quotesReducer.js';
 
 export const QuotesContext = createContext();
-export const DispatchContext = createContext();
+export const QuoteDispatchContext = createContext();
 
 const defaultQuotes = {
   quotes: [],
 };
 export function QuotesProvider(props) {
-  const [quotes, dispatch] = useReducer(quotesReducer, defaultQuotes);
+  const [quotes, quoteDispatch] = useReducer(reducer, defaultQuotes);
   return (
     <QuotesContext.Provider value={quotes}>
-      <DispatchContext.Provider value={dispatch}>
+      <QuoteDispatchContext.Provider value={quoteDispatch}>
         {props.children}
-      </DispatchContext.Provider>
+      </QuoteDispatchContext.Provider>
     </QuotesContext.Provider>
   );
 }

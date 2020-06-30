@@ -5,4 +5,3 @@ export * from './Result';
 export * from './UseCase';
 export * from './QuoteRepository';
 export * from './Translation';
-export * from './MasterData';

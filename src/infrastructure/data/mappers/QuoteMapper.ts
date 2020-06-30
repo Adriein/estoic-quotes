@@ -6,10 +6,8 @@ export class QuoteMapper {
     return quotes.map((quote) => {
       return {
         _id: quote._id,
-        author: quote.author,
         topic: quote.topic,
         quote: quote.quote,
-        origin: quote.origin,
         creationDate: quote.creationDate,
       };
     }) as Quote[];
@@ -18,10 +16,8 @@ export class QuoteMapper {
   quoteSchemaToDomainQuote(quote: QuoteDoc): Quote {
     return {
       _id: quote._id,
-      author: quote.author,
       topic: quote.topic,
       quote: quote.quote,
-      origin: quote.origin,
       creationDate: quote.creationDate,
     } as Quote;
   }

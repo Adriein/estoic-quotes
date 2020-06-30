@@ -14,6 +14,7 @@ import Grid from '@material-ui/core/Grid';
 
 
 import { AuthContext, DispatchContext } from '../context/AuthContext';
+import { QuoteDispatchContext } from '../context/QuotesContext';
 import useInputState from '../hooks/useInputState';
 import axios from 'axios';
 import QuotesForm from './QuotesForm';
@@ -88,17 +89,14 @@ const useStyles = makeStyles((theme) => ({
 export function Dashboard() {
   const { auth } = useContext(AuthContext);
   const dispatch = useContext(DispatchContext);
+  const quoteDispatch = useContext(QuoteDispatchContext)
   const classes = useStyles();
 
   const [value, handleChange, reset] = useInputState({
     topic: '',
     translatedTopic: '',
-    author: '',
-    translatedAuthor: '',
     quote: '',
     translatedQuote: '',
-    origin: '',
-    translatedOrigin: '',
   });
 
   const handleLogout = async (e) => {
@@ -118,16 +116,17 @@ export function Dashboard() {
 
   const handleSubmit = async (e) => {
     try {
-      const response = await axios.post('api/auth/quote', value);
-      dispatch({
+      const response = await axios.post('api/admin/quote', value);
+      quoteDispatch({
         type: 'POST_QUOTE',
         response,
       });
       reset();
     } catch (error) {
-      dispatch({
+      console.log(error.response)
+      quoteDispatch({
         type: 'ERROR',
-        error: error.response.data.errors,
+        error:error.response,
       });
     }
   };

@@ -41,6 +41,7 @@ export const requireAuth = (
   res: Response,
   next: NextFunction
 ) => {
+  console.log(req.session!.jwt)
   if (!req.session || !req.session.jwt) {
     throw new NotAuthorizedError();
   }

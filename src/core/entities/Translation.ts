@@ -1,4 +1,4 @@
-enum type {
+export enum type {
   AUTHOR = 'author',
   TOPIC = 'topic',
   ORIGIN = 'origin',

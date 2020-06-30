@@ -1,16 +1,14 @@
 const reducer = (state, action) => {
   switch (action.type) {
     case 'POST_QUOTE':
+      console.log('action')
+      console.log(action)
       return {
         quotes: [...state.quotes, action.response.data[0]],
       };
     case 'ERROR':
-      return {
-        return {
-          quotes:[...state.quotes],
-          errormsg: action.error[0].message
-        }
-      }
+      console.log(action)
+      break;
     default:
       return state;
   }
