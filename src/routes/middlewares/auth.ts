@@ -41,7 +41,7 @@ export const requireAuth = (
   res: Response,
   next: NextFunction
 ) => {
-  console.log(req.session!.jwt)
+
   if (!req.session || !req.session.jwt) {
     throw new NotAuthorizedError();
   }
@@ -50,7 +50,20 @@ export const requireAuth = (
       req.session.jwt,
       process.env.JWT_KEY!
     ) as UserPayload;
-    req.session = payload;
+
+    const userJwt = jwt.sign(
+      {
+        id: payload.id,
+        email: payload.email,
+        uername: payload.username,
+      },
+      process.env.JWT_KEY!
+    );
+
+    // Store it on session object
+    req.session = {
+      jwt: userJwt,
+    };
     next();
   } catch (err) {
     throw new NotAuthorizedError();

@@ -34,12 +34,11 @@ const init = async () => {
     cookieSession({
       signed: false,
       secure: false,
-      maxAge: 900000,
+      // maxAge: 900000,
       httpOnly: false,
     })
   );
   app.use('/api/auth', auth);
-  app.use('/api/admin', quotes);
   app.use('/api/admin', quotes);
   app.use(errorHandler);
   

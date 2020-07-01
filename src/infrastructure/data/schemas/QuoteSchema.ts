@@ -18,6 +18,14 @@ const quoteSchema = new Schema(
       type: String,
       required: true,
     },
+    author: {
+      type: String,
+      required: true,
+    },
+    origin: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true }
 );

@@ -7,6 +7,8 @@ export class QuoteMapper {
       return {
         _id: quote._id,
         topic: quote.topic,
+        author: quote.author,
+        origin: quote.origin,
         quote: quote.quote,
         creationDate: quote.creationDate,
       };
@@ -17,6 +19,8 @@ export class QuoteMapper {
     return {
       _id: quote._id,
       topic: quote.topic,
+      author: quote.author,
+      origin: quote.origin,
       quote: quote.quote,
       creationDate: quote.creationDate,
     } as Quote;

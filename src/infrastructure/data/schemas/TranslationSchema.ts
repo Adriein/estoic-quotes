@@ -15,7 +15,6 @@ const translationSchema = new Schema(
     },
     original_id: {
       type: String,
-      unique: true,
       required: true,
     },
     spanish: {

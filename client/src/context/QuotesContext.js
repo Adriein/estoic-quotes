@@ -6,6 +6,8 @@ export const QuoteDispatchContext = createContext();
 
 const defaultQuotes = {
   quotes: [],
+  open: false,
+  form: false,
 };
 export function QuotesProvider(props) {
   const [quotes, quoteDispatch] = useReducer(reducer, defaultQuotes);

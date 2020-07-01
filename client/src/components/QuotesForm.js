@@ -1,5 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import axios from 'axios';
+
+import { QuotesContext, QuoteDispatchContext } from '../context/QuotesContext';
+import useInputState from '../hooks/useInputState';
 
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
@@ -7,6 +11,12 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
+import Snackbar from '@material-ui/core/Snackbar';
+import SaveAltIcon from '@material-ui/icons/SaveAlt';
+import Grid from '@material-ui/core/Grid';
+import MuiAlert from '@material-ui/lab/Alert';
+import Container from '@material-ui/core/Container';
+import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -16,45 +26,12 @@ const useStyles = makeStyles((theme) => ({
       listStyle: 'none',
     },
   },
-  appBar: {
-    borderBottom: `1px solid ${theme.palette.divider}`,
-  },
-  toolbar: {
-    flexWrap: 'wrap',
-  },
-  toolbarTitle: {
-    flexGrow: 1,
-  },
-  link: {
-    margin: theme.spacing(1, 1.5),
-  },
+
   save: {
     paddingTop: theme.spacing(3),
   },
   heroContent: {
     padding: theme.spacing(8, 0, 6),
-  },
-  cardHeader: {
-    backgroundColor:
-      theme.palette.type === 'light'
-        ? theme.palette.grey[200]
-        : theme.palette.grey[700],
-  },
-  cardPricing: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'baseline',
-    marginBottom: theme.spacing(2),
-  },
-  footer: {
-    borderTop: `1px solid ${theme.palette.divider}`,
-    marginTop: theme.spacing(0),
-    paddingTop: theme.spacing(3),
-    paddingBottom: theme.spacing(3),
-    [theme.breakpoints.up('sm')]: {
-      paddingTop: theme.spacing(6),
-      paddingBottom: theme.spacing(6),
-    },
   },
   formControl: {
     margin: theme.spacing(1),
@@ -62,7 +39,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function QuotesForm({ value, handleChange, lang }) {
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
+function Form({ value, handleChange, lang }) {
   const classes = useStyles();
   return (
     <>
@@ -104,6 +85,22 @@ function QuotesForm({ value, handleChange, lang }) {
         </FormControl>
       )}
       <TextField
+        className={classes.formControl}
+        label={lang === 'en' ? 'Author' : 'Autor'}
+        variant="outlined"
+        value={lang === 'en' ? value.author : value.translatedAuthor}
+        onChange={handleChange}
+        name={lang === 'en' ? 'author' : 'translatedAuthor'}
+      />
+      <TextField
+        className={classes.formControl}
+        label={lang === 'en' ? 'Origin' : 'Origen'}
+        variant="outlined"
+        value={lang === 'en' ? value.origin : value.translatedOrigin}
+        onChange={handleChange}
+        name={lang === 'en' ? 'origin' : 'translatedOrigin'}
+      />
+      <TextField
         id="outlined-multiline-static"
         label={lang === 'en' ? 'Quote' : 'Cita Traducida'}
         multiline
@@ -119,6 +116,80 @@ function QuotesForm({ value, handleChange, lang }) {
         onChange={handleChange}
         fullWidth
       />
+    </>
+  );
+}
+
+function QuotesForm() {
+  const classes = useStyles();
+  const quoteDispatch = useContext(QuoteDispatchContext);
+  const quotes = useContext(QuotesContext);
+
+  const [value, handleChange, reset] = useInputState({
+    topic: '',
+    author: '',
+    translatedAuthor: '',
+    origin: '',
+    translatedOrigin: '',
+    quote: '',
+    translatedQuote: '',
+  });
+
+  const handleSubmit = async (e) => {
+    try {
+      const response = await axios.post('api/admin/quote', value);
+      quoteDispatch({
+        type: 'POST_QUOTE',
+        response,
+      });
+      reset();
+    } catch (error) {
+      quoteDispatch({
+        type: 'ERROR',
+        error: error.response,
+      });
+    }
+  };
+
+  const handleClose = () => {
+    quoteDispatch({
+      type: 'CLOSE',
+    });
+  };
+
+  return (
+    <>
+      <Snackbar
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+        open={quotes.open}
+        onClose={handleClose}
+        autoHideDuration={3000}
+      >
+        <Alert severity="success">Quote saved successful</Alert>
+      </Snackbar>
+      <Container maxWidth="md" component="main" className={classes.heroContent}>
+        <Form value={value} handleChange={handleChange} lang={'en'} />
+      </Container>
+      {/* End hero unit */}
+      <Container maxWidth="md" component="main" className={classes.heroContent}>
+        <Form value={value} handleChange={handleChange} lang={'es'} />
+        <Grid
+          container
+          justify="center"
+          alignItems="center"
+          className={classes.save}
+        >
+          <Button
+            variant="contained"
+            color="primary"
+            size="large"
+            endIcon={<SaveAltIcon />}
+            onClick={handleSubmit}
+          >
+            Save
+          </Button>
+        </Grid>
+      </Container>
     </>
   );
 }

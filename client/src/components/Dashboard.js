@@ -1,5 +1,10 @@
 import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import { QuotesContext, QuoteDispatchContext } from '../context/QuotesContext';
+import { AuthContext, DispatchContext } from '../context/AuthContext';
+import QuotesList from './QuotesList';
+import QuotesForm from './QuotesForm';
+import axios from 'axios';
 
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
@@ -9,15 +14,6 @@ import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
-import SaveAltIcon from '@material-ui/icons/SaveAlt';
-import Grid from '@material-ui/core/Grid';
-
-
-import { AuthContext, DispatchContext } from '../context/AuthContext';
-import { QuoteDispatchContext } from '../context/QuotesContext';
-import useInputState from '../hooks/useInputState';
-import axios from 'axios';
-import QuotesForm from './QuotesForm';
 
 function Copyright() {
   return (
@@ -51,24 +47,10 @@ const useStyles = makeStyles((theme) => ({
   },
   link: {
     margin: theme.spacing(1, 1.5),
-  },
-  save: {
-    paddingTop: theme.spacing(3),
+    cursor: 'pointer',
   },
   heroContent: {
     padding: theme.spacing(8, 0, 6),
-  },
-  cardHeader: {
-    backgroundColor:
-      theme.palette.type === 'light'
-        ? theme.palette.grey[200]
-        : theme.palette.grey[700],
-  },
-  cardPricing: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'baseline',
-    marginBottom: theme.spacing(2),
   },
   footer: {
     borderTop: `1px solid ${theme.palette.divider}`,
@@ -80,24 +62,14 @@ const useStyles = makeStyles((theme) => ({
       paddingBottom: theme.spacing(6),
     },
   },
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120,
-  },
 }));
 
 export function Dashboard() {
+  const classes = useStyles();
   const { auth } = useContext(AuthContext);
   const dispatch = useContext(DispatchContext);
-  const quoteDispatch = useContext(QuoteDispatchContext)
-  const classes = useStyles();
-
-  const [value, handleChange, reset] = useInputState({
-    topic: '',
-    translatedTopic: '',
-    quote: '',
-    translatedQuote: '',
-  });
+  const quoteDispatch = useContext(QuoteDispatchContext);
+  const quotes = useContext(QuotesContext);
 
   const handleLogout = async (e) => {
     try {
@@ -114,21 +86,10 @@ export function Dashboard() {
     }
   };
 
-  const handleSubmit = async (e) => {
-    try {
-      const response = await axios.post('api/admin/quote', value);
-      quoteDispatch({
-        type: 'POST_QUOTE',
-        response,
-      });
-      reset();
-    } catch (error) {
-      console.log(error.response)
-      quoteDispatch({
-        type: 'ERROR',
-        error:error.response,
-      });
-    }
+  const toggleView = (e) => {
+    quoteDispatch({
+      type: e.target.name,
+    });
   };
 
   return (
@@ -149,6 +110,24 @@ export function Dashboard() {
           >
             Welcome: {auth.username}
           </Typography>
+          <Link
+            variant="button"
+            color="textPrimary"
+            className={classes.link}
+            name="TOGGLE_VIEW"
+            onClick={toggleView}
+          >
+            Quotes
+          </Link>
+          <Link
+            variant="button"
+            color="textPrimary"
+            name="TOGGLE_CREATE"
+            className={classes.link}
+            onClick={toggleView}
+          >
+            Create Quotes
+          </Link>
           <Button
             color="primary"
             variant="outlined"
@@ -160,29 +139,7 @@ export function Dashboard() {
         </Toolbar>
       </AppBar>
       {/* Hero unit */}
-      <Container maxWidth="md" component="main" className={classes.heroContent}>
-        <QuotesForm value={value} handleChange={handleChange} lang={'en'}/>
-      </Container>
-      {/* End hero unit */}
-      <Container maxWidth="md" component="main" className={classes.heroContent}>
-        <QuotesForm value={value} handleChange={handleChange} lang={'es'}/>
-        <Grid
-          container
-          justify="center"
-          alignItems="center"
-          className={classes.save}
-        >
-          <Button
-            variant="contained"
-            color="primary"
-            size="large"
-            endIcon={<SaveAltIcon />}
-            onClick={handleSubmit}
-          >
-            Save
-          </Button>
-        </Grid>
-      </Container>
+      {quotes.form ? <QuotesForm /> : <QuotesList />}
       {/* Footer */}
       <Container maxWidth="md" component="footer" className={classes.footer}>
         <Box mt={5}>
