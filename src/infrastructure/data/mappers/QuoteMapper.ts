@@ -10,7 +10,7 @@ export class QuoteMapper {
         author: quote.author,
         origin: quote.origin,
         quote: quote.quote,
-        creationDate: quote.creationDate,
+        creationDate: quote.createdAt,
       };
     }) as Quote[];
   }
@@ -22,7 +22,7 @@ export class QuoteMapper {
       author: quote.author,
       origin: quote.origin,
       quote: quote.quote,
-      creationDate: quote.creationDate,
+      creationDate: quote.createdAt,
     } as Quote;
   }
 }

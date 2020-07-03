@@ -6,6 +6,7 @@ import {
   ReadQuoteUseCase,
   CreateQuoteUseCase,
   ModifyQuoteUseCase,
+  DeleteQuoteUseCase,
 } from '../core/usecases';
 import { requireAuth } from './middlewares/auth';
 
@@ -55,12 +56,12 @@ router.post(
   }
 );
 router.put(
-  '/quote',
+  '/quote/:id',
   requireAuth,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const usecase = new ModifyQuoteUseCase(repository);
-      const response = await usecase.execute(req.body);
+      const response = await usecase.execute(req.params.id, req.body);
       res.send(response.data);
       return;
     } catch (error) {
@@ -68,8 +69,19 @@ router.put(
     }
   }
 );
-//   .delete('/quote/:id', async (req: Request, res: Response) => {
-//     return;
-//   });
+router.delete(
+  '/quote/:id',
+  requireAuth,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const usecase = new DeleteQuoteUseCase(repository);
+      await usecase.execute(req.params.id);
+      res.send({});
+      return;
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 export { router as quotes };

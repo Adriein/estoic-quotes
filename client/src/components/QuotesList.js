@@ -1,22 +1,15 @@
 import React, { useContext, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
+import moment from 'moment';
 
 import { QuotesContext, QuoteDispatchContext } from '../context/QuotesContext';
-import useInputState from '../hooks/useInputState';
 
 import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import InputLabel from '@material-ui/core/InputLabel';
 import Snackbar from '@material-ui/core/Snackbar';
-import SaveAltIcon from '@material-ui/icons/SaveAlt';
 import Grid from '@material-ui/core/Grid';
 import MuiAlert from '@material-ui/lab/Alert';
 import Container from '@material-ui/core/Container';
-import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
@@ -56,16 +49,6 @@ export default function QuotesList() {
   const quoteDispatch = useContext(QuoteDispatchContext);
   const quotes = useContext(QuotesContext);
 
-  const [value, handleChange, reset] = useInputState({
-    topic: '',
-    author: '',
-    translatedAuthor: '',
-    origin: '',
-    translatedOrigin: '',
-    quote: '',
-    translatedQuote: '',
-  });
-
   useEffect(() => {
     const fetchQuotes = async () => {
       quoteDispatch({
@@ -76,27 +59,27 @@ export default function QuotesList() {
     fetchQuotes();
   }, []);
 
-  const handleSubmit = async (e) => {
-    try {
-      const response = await axios.post('api/admin/quote', value);
-      quoteDispatch({
-        type: 'POST_QUOTE',
-        response,
-      });
-      reset();
-    } catch (error) {
-      quoteDispatch({
-        type: 'ERROR',
-        error: error.response,
-      });
-    }
-  };
-
   const handleClose = () => {
     quoteDispatch({
-      type: 'CLOSE',
+      type: 'CLOSE_DELETE_INFO',
     });
   };
+
+  const handleEdit = (e) => {
+    quoteDispatch({
+      type: 'EDIT',
+      payload: e.currentTarget.name,
+    });
+  };
+
+  const handleDelete = async (e) => {
+    quoteDispatch({
+      type: 'DELETE',
+      selected: e.currentTarget.name,
+      payload: await axios.delete(`api/admin/quote/${e.currentTarget.name}`),
+    });
+  };
+
   return (
     <>
       <Snackbar
@@ -105,7 +88,7 @@ export default function QuotesList() {
         onClose={handleClose}
         autoHideDuration={3000}
       >
-        <Alert severity="success">Quote saved successful</Alert>
+        <Alert severity="success">Quote deleted successful</Alert>
       </Snackbar>
       <Container maxWidth="md" component="main" className={classes.heroContent}>
         <Grid container spacing={2}>
@@ -114,7 +97,7 @@ export default function QuotesList() {
               <Card className={classes.root}>
                 <CardHeader
                   title={quote.topic.toUpperCase()}
-                  subheader="September 14, 2016"
+                  subheader={moment(quote.creationDate).calendar()}
                 />
                 <CardContent>
                   <Typography variant="body1" color="textPrimary" component="p">
@@ -129,10 +112,18 @@ export default function QuotesList() {
                   </Typography>
                 </CardContent>
                 <CardActions disableSpacing>
-                  <IconButton aria-label="add to favorites">
+                  <IconButton
+                    aria-label="edit"
+                    onClick={handleEdit}
+                    name={quote._id}
+                  >
                     <EditIcon />
                   </IconButton>
-                  <IconButton aria-label="delete">
+                  <IconButton
+                    aria-label="delete"
+                    onClick={handleDelete}
+                    name={quote._id}
+                  >
                     <DeleteIcon />
                   </IconButton>
                 </CardActions>

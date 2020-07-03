@@ -39,7 +39,7 @@ export class QuoteRepository implements Repository<Quote> {
   }
 
   async delete(id: string): Promise<number> {
-    throw new Error();
+    return (await QuoteModel.deleteOne({ _id: id }).exec()).ok as number;
   }
 
   async saveTranslation(translation: Translation): Promise<void> {
@@ -56,5 +56,11 @@ export class QuoteRepository implements Repository<Quote> {
     );
 
     await TranslationModel.updateOne({ _id: id }, translationSchema);
+  }
+
+  async findRelatedTranslations(quoteId: string): Promise<Translation[]> {
+    return this.transMapper.translationSchemaToDomainTranslation(
+      await TranslationModel.find({ original_id: quoteId }).exec()
+    );
   }
 }

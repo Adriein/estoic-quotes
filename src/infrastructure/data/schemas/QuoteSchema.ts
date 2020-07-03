@@ -5,7 +5,8 @@ export interface QuoteDoc extends mongoose.Document {
   author: string;
   quote: string;
   origin: string;
-  creationDate: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 const quoteSchema = new Schema(

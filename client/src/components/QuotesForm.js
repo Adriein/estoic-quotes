@@ -124,29 +124,28 @@ function QuotesForm() {
   const classes = useStyles();
   const quoteDispatch = useContext(QuoteDispatchContext);
   const quotes = useContext(QuotesContext);
-
-  const [value, handleChange, reset] = useInputState({
-    topic: '',
-    author: '',
-    translatedAuthor: '',
-    origin: '',
-    translatedOrigin: '',
-    quote: '',
-    translatedQuote: '',
-  });
+  console.log(quotes.inputs)
+  const [value, handleChange, reset] = useInputState(quotes.inputs);
 
   const handleSubmit = async (e) => {
     try {
-      const response = await axios.post('api/admin/quote', value);
-      quoteDispatch({
-        type: 'POST_QUOTE',
-        response,
-      });
+      if (quotes.selected && quotes.selected !== '') {
+        quoteDispatch({
+          type: 'UPDATE_QUOTE',
+          payload: await axios.put(`api/admin/quote/${quotes.selected}`, value),
+        });
+      } else {
+        quoteDispatch({
+          type: 'POST_QUOTE',
+          payload: await axios.post('api/admin/quote', value),
+        });
+      }
       reset();
     } catch (error) {
       quoteDispatch({
         type: 'ERROR',
-        error: error.response,
+        selected: quotes.selected,
+        payload: error.response,
       });
     }
   };
@@ -165,7 +164,9 @@ function QuotesForm() {
         onClose={handleClose}
         autoHideDuration={3000}
       >
-        <Alert severity="success">Quote saved successful</Alert>
+        <Alert severity={quotes.errormsg !== '' ? 'error' : 'success'}>
+          {quotes.errormsg !== '' ? quotes.errormsg : 'Quote saved successful'}
+        </Alert>
       </Snackbar>
       <Container maxWidth="md" component="main" className={classes.heroContent}>
         <Form value={value} handleChange={handleChange} lang={'en'} />

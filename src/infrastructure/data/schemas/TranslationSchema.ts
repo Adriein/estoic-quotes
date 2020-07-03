@@ -4,7 +4,7 @@ export interface TranslationDoc extends mongoose.Document {
   type: string;
   original_id: string;
   spanish: string;
-  creationDate: Date;
+  createdAt: Date;
 }
 
 const translationSchema = new Schema(

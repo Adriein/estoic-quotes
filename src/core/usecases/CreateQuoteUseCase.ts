@@ -13,7 +13,6 @@ export class CreateQuoteUseCase implements UseCase<Quote> {
     });
 
     //save the translated quote
-
     await Promise.all([
       this.repository.saveTranslation({
         type: type.AUTHOR,
