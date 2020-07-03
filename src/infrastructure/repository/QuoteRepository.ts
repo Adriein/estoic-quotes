@@ -54,7 +54,6 @@ export class QuoteRepository implements Repository<Quote> {
     const translationSchema = this.transMapper.domainTranslationToSchemaTranslation(
       translation
     );
-
     await TranslationModel.updateOne({ _id: id }, translationSchema);
   }
 
@@ -62,5 +61,10 @@ export class QuoteRepository implements Repository<Quote> {
     return this.transMapper.translationSchemaToDomainTranslation(
       await TranslationModel.find({ original_id: quoteId }).exec()
     );
+  }
+
+  async deleteTranslation(id: string): Promise<string> {
+    await TranslationModel.deleteOne({ original_id: id }).exec();
+    return id;
   }
 }

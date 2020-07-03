@@ -124,7 +124,6 @@ function QuotesForm() {
   const classes = useStyles();
   const quoteDispatch = useContext(QuoteDispatchContext);
   const quotes = useContext(QuotesContext);
-  console.log(quotes.inputs)
   const [value, handleChange, reset] = useInputState(quotes.inputs);
 
   const handleSubmit = async (e) => {

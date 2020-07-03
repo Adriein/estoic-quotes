@@ -22,7 +22,7 @@ const reducer = (state, action) => {
         selected: action.selected,
         quotes: [],
         open: true,
-        form: true,
+        form: false,
         errormsg: '',
         inputs: {
           topic: '',
@@ -68,6 +68,7 @@ const reducer = (state, action) => {
         },
       };
     case 'FETCH_QUOTES':
+      console.log(action.payload.data);
       return {
         quotes: [...action.payload.data],
         open: false,
@@ -111,11 +112,23 @@ const reducer = (state, action) => {
         inputs: {
           topic: selectedQuote.topic,
           author: selectedQuote.author,
-          translatedAuthor: '',
+          translatedAuthor: selectedQuote.translations
+            ? selectedQuote.translations.find(
+                (translation) => translation.type === 'author'
+              ).spanish
+            : '',
           origin: selectedQuote.origin,
-          translatedOrigin: '',
+          translatedOrigin: selectedQuote.translations
+            ? selectedQuote.translations.find(
+                (translation) => translation.type === 'origin'
+              ).spanish
+            : '',
           quote: selectedQuote.quote,
-          translatedQuote: '',
+          translatedQuote: selectedQuote.translations
+            ? selectedQuote.translations.find(
+                (translation) => translation.type === 'quote'
+              ).spanish
+            : '',
         },
       };
     case 'DELETE':

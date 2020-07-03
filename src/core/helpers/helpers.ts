@@ -34,3 +34,35 @@ export const maskFields = (object: any, array: string[]): Object => {
   });
   return object;
 };
+
+export const validateQuote = (input: {
+  topic: string;
+  author: string;
+  translatedAuthor: string;
+  origin: string;
+  translatedOrigin: string;
+  quote: string;
+  translatedQuote: string;
+}): boolean => {
+  const {
+    topic,
+    author,
+    translatedAuthor,
+    origin,
+    translatedOrigin,
+    quote,
+    translatedQuote,
+  } = input;
+  if (
+    topic === '' ||
+    author === '' ||
+    translatedAuthor === '' ||
+    origin === '' ||
+    translatedOrigin === '' ||
+    quote === '' ||
+    translatedQuote === ''
+  )
+    return false;
+
+  return true;
+};

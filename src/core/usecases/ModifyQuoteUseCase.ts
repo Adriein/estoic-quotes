@@ -6,15 +6,20 @@ import {
   type,
   Translation,
 } from '../entities';
-import { isEmpty } from '../helpers';
+import { isEmpty, validateQuote } from '../helpers';
 import { NotFound } from '../errors/NotFound';
+import { BadRequest } from '../errors';
 
 export class ModifyQuoteUseCase implements UseCase<Quote> {
   constructor(private repository: QuoteRepository<Quote>) {}
 
   async execute(quoteId: string, quote: any): Promise<Result<Quote>> {
+    //Check if the quote is completed
+    if (!validateQuote(quote))
+      throw new BadRequest('Some field of the quote is missing');
+
     const quoteOnDb = await this.repository.fetch(quoteId);
-    
+
     if (isEmpty(quoteOnDb)) throw new NotFound('Quote not found');
 
     const updatedOnDb = await this.repository.put(quoteId, quote);
@@ -27,7 +32,7 @@ export class ModifyQuoteUseCase implements UseCase<Quote> {
     for (const translation of relatedTranlations) {
       await this.repository.updateTranslation(translation._id!, {
         type: translation.type,
-        original: quote._id,
+        original: quoteId,
         spanish: getCorrectTranslation(quote, translation),
       });
     }
