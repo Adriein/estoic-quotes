@@ -1,5 +1,6 @@
 import { scrypt, randomBytes } from 'crypto';
 import { promisify } from 'util';
+import { Subscriber } from '../entities';
 
 const scryptAsync = promisify(scrypt);
 
@@ -63,6 +64,12 @@ export const validateQuote = (input: {
     translatedQuote === ''
   )
     return false;
+
+  return true;
+};
+
+export const validateSubscriber = (subscriber: Subscriber): boolean => {
+  if (subscriber.email === undefined || subscriber.email === '') return false;
 
   return true;
 };

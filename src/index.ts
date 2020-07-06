@@ -3,6 +3,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import { quotes } from './routes/quotes';
 import { auth } from './routes/auth';
+import { subscribe } from './routes/subscribe';
 import mongoose from 'mongoose';
 import { errorHandler } from './routes/middlewares';
 import chalk from 'chalk';
@@ -40,13 +41,16 @@ const init = async () => {
   );
   app.use('/api/auth', auth);
   app.use('/api/admin', quotes);
+  app.use('/api', subscribe);
   app.use(errorHandler);
-  
+
   if (process.env.NODE_ENV === 'pro') {
     app.use(express.static('client/build'));
 
     app.get('*', (req, res) => {
-      res.sendFile(path.resolve(__dirname, '..', 'client', 'build', 'index.html'));
+      res.sendFile(
+        path.resolve(__dirname, '..', 'client', 'build', 'index.html')
+      );
     });
   }
 
