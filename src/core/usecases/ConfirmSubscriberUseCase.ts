@@ -3,15 +3,15 @@ import { BadRequest } from '../errors';
 
 export class ConfirmSubscriberUseCase implements UseCase<Subscriber> {
   constructor(private repository: Repository<Subscriber>) {}
-  async execute(subscriber: Subscriber): Promise<Result<Subscriber>> {
+  async execute(subscriber: any): Promise<Result<Subscriber>> {
     const [subscriberOnDb] = await this.repository.find({
-      email: subscriber.email,
+      email: subscriber[0].email,
     });
 
     if (!subscriberOnDb) throw new BadRequest('This subscriber not exists');
 
     const updatedSubscriber = {
-      email: subscriber.email,
+      email: subscriber[0].email,
       active: true,
       confirmed: true,
     } as Subscriber;

@@ -2,8 +2,8 @@ import mongoose, { Schema } from 'mongoose';
 
 export interface SubscriberDoc extends mongoose.Document {
   email: string;
-  confirmed: string;
-  active: string;
+  confirmed: boolean;
+  active: boolean;
   createdAt: Date;
   updatedAt: Date;
 }

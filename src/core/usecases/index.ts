@@ -9,3 +9,4 @@ export * from './RegisterSubscriberUseCase';
 export * from './UnRegisterSubscriberUseCase';
 export * from './RetriveAllSubscribersUseCase';
 export * from './ConfirmSubscriberUseCase';
+export * from './SendMailsUseCase';

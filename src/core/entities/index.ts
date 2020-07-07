@@ -6,3 +6,4 @@ export * from './UseCase';
 export * from './QuoteRepository';
 export * from './Translation';
 export * from './Subscriber';
+export * from './Mailer';
