@@ -31,7 +31,7 @@
     "cookie-session": "^1.4.0",
     "dotenv": "^8.2.0",
     "email-validator": "^2.0.4",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.9.17",
     "reflect-metadata": "^0.1.13",
